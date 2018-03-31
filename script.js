@@ -4,131 +4,75 @@ function main() {
 	var mainWindowHeight = mainWindow.offsetHeight;
 	console.log("Window WxH: ",mainWindowWidth, mainWindowHeight);
 
-	generateGrid(mainWindowWidth, mainWindowHeight);
+	var matrix = generateGrid(mainWindowWidth, mainWindowHeight);
+	var snek = [
+		document.getElementsByClassName('snek')[0]
+	];
 
-	var directions = ["top", "right", "bottom", "left"];
+	var direction = "right";
+
+	document.onkeydown = checkKey;
+
+	function checkKey(e) {
+
+	    e = e || window.event;
+
+	    if (e.keyCode == '38' && direction != 'down') {
+	        direction = 'up';
+	    }
+	    else if (e.keyCode == '40' && direction != 'up') {
+	        direction = 'down';
+	    }
+	    else if (e.keyCode == '37' && direction != 'right') {
+	       direction = 'left';
+	    }
+	    else if (e.keyCode == '39' && direction != 'left') {
+	       direction = 'right';
+	    }
+
+	}
+
+
 	var grow = false;
-	var snek = document.getElementsByClassName('snek');
+
 	setInterval(function(){
-		snek = move(snek, directions[0], grow);
-		for (i = 0; i < snek; i++) {
-			snek[i].classList.add("snek");
-		}
-		// if (grow) {
-		// 	grow = false;
-		// } else {
-		// 	grow = true;
-		// }
-	}, 1000);
+		snek = move(matrix, snek, direction, grow);
+		// console.log(snek);
+	}, 100);
 }
 
-function move(snek, direction, grow) {
-	// var snek = document.getElementsByClassName('snek');
+function move(matrix, snek, direction, grow) {
 
 	var next;
+	var newSnek = [];
 
 	for (i = 0; i < snek.length; i++) {
-		var nextCol = document.getElementsByClassName(snek[i].classList[2]);
-
-		for (j = 0; j < nextCol.length; j++) {
-			if (nextCol[j].classList.contains(snek[i].classList[1])) {
-				next = nextCol[j-1];
-			} 
+		if (direction == "up" && i == 0) {
+			next = matrix[parseInt(snek[i].dataset.row) - 1][parseInt(snek[i].dataset.col)];			
+		} else if (direction == "right" && i == 0) {
+			next = matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col) + 1];
+		} else if (direction == "down" && i == 0) {
+			next = matrix[parseInt(snek[i].dataset.row) + 1][parseInt(snek[i].dataset.col)];
+		} else if (direction == "left" && i == 0) {
+			next = matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col) - 1];
+		} else if (i > 0) {
+			next = snek[i-1];
 		}
-				
+
+		newSnek.push(next);
+
+		if (i == snek.length - 1 && matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col)].classList.contains('punt')) {
+			newSnek.push(snek[i]);
+			matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col)].classList.remove('punt');
+		}
+	}	
+
+	for (i = 0; i < snek.length; i++) {
+		snek[i].classList.remove("snek");
+		newSnek[i].classList.add("snek");
 	}
 
-	console.log(snek);
-
-	var newSnek = [];
-	newSnek.push(next);
-
-	for (i = 0; i < newSnek; i++) {
-		snek.push(newSnek[i]);
-	}
-
-	return snek;
-
-	// if (direction == "top") {
-	// 	for (i = 0; i < snek.length; i++) {
-	// 		var nextCol = document.getElementsByClassName(snek[i].classList[2]);
-	// 		var next;
-
-	// 		for (j = 0; j < nextCol.length; j++) {
-	// 			if (nextCol[j].classList.contains(snek[i].classList[1])) {
-	// 				next = nextCol[j-1];
-	// 			} 
-	// 		}
-
-	// 		if (grow && i == snek.length - 1) {
-	// 			next.classList.add("snek");	
-	// 		} else {
-	// 			snek[i].classList.remove("snek");
-	// 			next.classList.add("snek");	
-	// 		}
-					
-	// 	}
-
-	// } else if (direction == "right") {
-	// 	for (i = snek.length; i--;) {
-	// 		var nextRow = document.getElementsByClassName(snek[i].classList[1]);
-	// 		var next;
-
-	// 		for (j = 0; j < nextRow.length; j++) {
-	// 			if (nextRow[j].classList.contains(snek[i].classList[2])) {
-	// 				next = nextRow[j+1];
-	// 			} 
-	// 		}
-
-	// 		if (grow && i == snek.length - 1) {
-	// 			next.classList.add("snek");
-	// 		} else {
-	// 			next.classList.add("snek");
-	// 			snek[i].classList.remove("snek");
-	// 		}
-
-	// 	}
-
-	// } else if (direction == "bottom") {
-	// 	for (i = snek.length; i--;) {
-	// 		var nextCol = document.getElementsByClassName(snek[i].classList[2]);
-	// 		var next;
-
-	// 		for (j = 0; j < nextCol.length; j++) {
-	// 			if (nextCol[j].classList.contains(snek[i].classList[1])) {
-	// 				next = nextCol[j+1];
-	// 			} 
-	// 		}
-
-	// 		if (grow && i == snek.length - 1) {
-	// 			next.classList.add("snek");
-	// 		} else {
-	// 			next.classList.add("snek");
-	// 			snek[i].classList.remove("snek");
-	// 		}
-			
-	// 	}
-	// } else if (direction == "left") {
-	// 	for (i = 0; i < snek.length; i++) {
-	// 		var nextRow = document.getElementsByClassName(snek[i].classList[1]);
-	// 		var next;
-
-	// 		for (j = 0; j < nextRow.length; j++) {
-	// 			if (nextRow[j].classList.contains(snek[i].classList[2])) {
-	// 				next = nextRow[j-1];
-	// 			} 
-	// 		}
-
-	// 		if (grow && i == snek.length - 1) {
-	// 			next.classList.add("snek");	
-	// 		} else {
-	// 			snek[i].classList.remove("snek");
-	// 			next.classList.add("snek");	
-	// 		}
-					
-	// 	}
-
-	// }
+	return newSnek;
 	
 }
 
@@ -149,6 +93,7 @@ function generateGrid(width, height) {
 	var cellSurface = cellWidth**2;
 	var numberOfCells = Math.floor(gridSurface/cellSurface);
 	var cellsOnRow = gridWindowWidth/cellWidth;
+	var cellsOnCol = gridWindowHeight/cellWidth;
 	console.log("Number of cells: ", numberOfCells);
 	console.log("Cells on row: ", cellsOnRow);
 
@@ -161,16 +106,43 @@ function generateGrid(width, height) {
 		cell.className = "cell";
 		cell.classList.add("r"+cellRow);
 		cell.classList.add("c"+cellCol);
+		cell.dataset.row = cellRow;
+		cell.dataset.col = cellCol;
 		if (i == Math.floor(numberOfCells/2)) {
 			cell.classList.add("snek");
 		} 
 
-		// if (i == Math.floor(numberOfCells/2)+1) {
-		// 	cell.classList.add("snek");
-		// } 
+		if (i == Math.floor(numberOfCells/2)+5) {
+			cell.classList.add("punt");
+		} 
+
+		if (i == Math.floor(numberOfCells/2)+8) {
+			cell.classList.add("punt");
+		} 
 
 		document.getElementById('gridWindow').appendChild(cell);
 	}
+
+	var matrix = [];
+	var allCells = document.getElementsByClassName('cell');
+
+	var numberOfPoints = 5;
+	for (i = 0; i < numberOfPoints; i++) {
+		var random = Math.floor((Math.random()*numberOfCells) + 1);
+		allCells[random].classList.add('punt');
+	}
+	
+	for (i = 0; i < cellsOnCol; i++) {
+		var row = [];
+		matrix.push(row);
+	}
+	
+	for (i = 0; i < numberOfCells; i++) {
+		matrix[Math.floor(i/cellsOnRow)].push(allCells[i]);
+	}
+
+	return matrix;
+
 }
 
 window.onload = function() {
