@@ -10,6 +10,8 @@ function main() {
 	var snek = [matrix[matrix.length/2][matrix[0].length/2]];
 	// snek[0].classList.add("snek");
 
+	var punten = document.getElementsByClassName('punt');
+
 	var direction = "right";
 	var directionToCheck = "right";
 	document.onkeydown = checkKey;
@@ -32,13 +34,16 @@ function main() {
 	var gameInterval = setInterval(function(){
 		direction = directionToCheck;
 		snek = move(matrix, snek, direction, grow);
-		// console.log(snek);
+		// console.log(snek.length);
 		if (snek.length == 0) {
 			clearInterval(gameInterval);
 			alert('T00 B4D G4M3 0VER');
 			return main();
+		} else if (punten.length == 0) {
+			alert('U D4 W1NN3R');
+			return main();
 		}
-	}, 100);
+	}, 50);
 
 
 }
@@ -50,11 +55,19 @@ function move(matrix, snek, direction, grow) {
 
 	for (i = 0; i < snek.length; i++) {
 		if (direction == "up" && i == 0) {
-			next = matrix[parseInt(snek[i].dataset.row) - 1][parseInt(snek[i].dataset.col)];			
+			if (snek[i].dataset.row == 0) {
+				next = undefined;
+			} else {
+				next = matrix[parseInt(snek[i].dataset.row) - 1][parseInt(snek[i].dataset.col)];
+			}		
 		} else if (direction == "right" && i == 0) {
 			next = matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col) + 1];
 		} else if (direction == "down" && i == 0) {
-			next = matrix[parseInt(snek[i].dataset.row) + 1][parseInt(snek[i].dataset.col)];
+			if (snek[i].dataset.row == matrix.length - 1) {
+				next = undefined;
+			} else {
+				next = matrix[parseInt(snek[i].dataset.row) + 1][parseInt(snek[i].dataset.col)];
+			}
 		} else if (direction == "left" && i == 0) {
 			next = matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col) - 1];
 		} else if (i > 0) {
@@ -136,7 +149,7 @@ function generateGrid(width, height) {
 		matrix[Math.floor(i/cellsOnRow)].push(allCells[i]);
 	}
 
-	var numberOfPoints = 25;
+	var numberOfPoints = 1;
 	for (i = 0; i < numberOfPoints; i++) {
 		var random = Math.floor((Math.random()*numberOfCells) + 1);
 		allCells[random].classList.add('punt');
