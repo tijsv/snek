@@ -1,6 +1,18 @@
 function main() {
+	var startDiv = document.getElementById('start');
+	startDiv.style.display = "flex";
+	var startButton = document.getElementById('startbutton');
+	startButton.onclick = function() {
+		var selectedSpeed = document.forms["settings"]["speed"].value;
+		game(selectedSpeed);
+	}
+}
+
+function game(speed) {
 	var mainWindow = document.getElementById('main');
 	mainWindow.innerHTML = "";
+	var startDiv = document.getElementById('start');
+	startDiv.style.display = "none";
 	var mainWindowWidth = mainWindow.offsetWidth;
 	var mainWindowHeight = mainWindow.offsetHeight;
 	console.log("Window WxH: ", mainWindowWidth, mainWindowHeight);
@@ -43,7 +55,7 @@ function main() {
 			alert('U D4 W1NN3R');
 			return main();
 		}
-	}, 50);
+	}, parseInt(speed));
 
 
 }
