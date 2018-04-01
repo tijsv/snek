@@ -149,7 +149,7 @@ function generateGrid(width, height) {
 		matrix[Math.floor(i/cellsOnRow)].push(allCells[i]);
 	}
 
-	var numberOfPoints = 1;
+	var numberOfPoints = 50;
 	for (i = 0; i < numberOfPoints; i++) {
 		var random = Math.floor((Math.random()*numberOfCells) + 1);
 		allCells[random].classList.add('punt');
