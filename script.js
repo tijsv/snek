@@ -10,32 +10,26 @@ function main() {
 	];
 
 	var direction = "right";
-
+	var directionToCheck = "right";
 	document.onkeydown = checkKey;
-
 	function checkKey(e) {
-
 	    e = e || window.event;
 
 	    if (e.keyCode == '38' && direction != 'down') {
-	        direction = 'up';
-	    }
-	    else if (e.keyCode == '40' && direction != 'up') {
-	        direction = 'down';
-	    }
-	    else if (e.keyCode == '37' && direction != 'right') {
-	       direction = 'left';
-	    }
-	    else if (e.keyCode == '39' && direction != 'left') {
-	       direction = 'right';
-	    }
-
-	}
-
+	        directionToCheck = 'up';
+	    } else if (e.keyCode == '40' && direction != 'up') {
+	        directionToCheck = 'down';
+	    } else if (e.keyCode == '37' && direction != 'right') {
+	       	directionToCheck = 'left';
+	    } else if (e.keyCode == '39' && direction != 'left') {
+	       	directionToCheck = 'right';
+    }
+}
 
 	var grow = false;
 
 	setInterval(function(){
+		direction = directionToCheck;
 		snek = move(matrix, snek, direction, grow);
 		// console.log(snek);
 	}, 100);
@@ -57,6 +51,10 @@ function move(matrix, snek, direction, grow) {
 			next = matrix[parseInt(snek[i].dataset.row)][parseInt(snek[i].dataset.col) - 1];
 		} else if (i > 0) {
 			next = snek[i-1];
+		}
+
+		if (i == 0 && next.classList.contains('snek')) {
+			alert('DONEZO');
 		}
 
 		newSnek.push(next);
@@ -111,22 +109,13 @@ function generateGrid(width, height) {
 		if (i == Math.floor(numberOfCells/2)) {
 			cell.classList.add("snek");
 		} 
-
-		if (i == Math.floor(numberOfCells/2)+5) {
-			cell.classList.add("punt");
-		} 
-
-		if (i == Math.floor(numberOfCells/2)+8) {
-			cell.classList.add("punt");
-		} 
-
 		document.getElementById('gridWindow').appendChild(cell);
 	}
 
 	var matrix = [];
 	var allCells = document.getElementsByClassName('cell');
 
-	var numberOfPoints = 5;
+	var numberOfPoints = 25;
 	for (i = 0; i < numberOfPoints; i++) {
 		var random = Math.floor((Math.random()*numberOfCells) + 1);
 		allCells[random].classList.add('punt');
@@ -148,3 +137,4 @@ function generateGrid(width, height) {
 window.onload = function() {
 	main();
 }
+
