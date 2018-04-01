@@ -7,7 +7,7 @@ function main() {
 
 	var matrix = generateGrid(mainWindowWidth, mainWindowHeight);
 
-	var snek = [matrix[matrix.length/2][matrix[0].length/2]];
+	var snek = [matrix[Math.floor(matrix.length/2)][Math.floor(matrix[0].length/2)]];
 	// snek[0].classList.add("snek");
 
 	var punten = document.getElementsByClassName('punt');
@@ -112,7 +112,7 @@ function generateGrid(width, height) {
 	console.log("Grid WxH: ", gridWindowWidth, gridWindowHeight);
 
 	var gridSurface = gridWindowWidth * gridWindowHeight;
-	var cellWidth = 10; // 5 or 10
+	var cellWidth = 20; // 5 || 10 || 20 || 50 
 	var cellSurface = cellWidth**2;
 	var numberOfCells = Math.floor(gridSurface/cellSurface);
 	var cellsOnRow = gridWindowWidth/cellWidth;
@@ -131,9 +131,6 @@ function generateGrid(width, height) {
 		// cell.classList.add("c"+cellCol);
 		cell.dataset.row = cellRow;
 		cell.dataset.col = cellCol;
-		// if (i == Math.floor(numberOfCells/2)) {
-		// 	cell.classList.add("snek");
-		// } 
 		document.getElementById('gridWindow').appendChild(cell);
 	}
 
@@ -151,7 +148,7 @@ function generateGrid(width, height) {
 
 	var numberOfPoints = 50;
 	for (i = 0; i < numberOfPoints; i++) {
-		var random = Math.floor((Math.random()*numberOfCells) + 1);
+		var random = Math.floor((Math.random()*numberOfCells));
 		allCells[random].classList.add('punt');
 	}
 
