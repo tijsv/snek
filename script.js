@@ -1,13 +1,14 @@
 function main() {
 	var mainWindow = document.getElementById('main');
+	mainWindow.innerHTML = "";
 	var mainWindowWidth = mainWindow.offsetWidth;
 	var mainWindowHeight = mainWindow.offsetHeight;
-	console.log("Window WxH: ",mainWindowWidth, mainWindowHeight);
+	console.log("Window WxH: ", mainWindowWidth, mainWindowHeight);
 
 	var matrix = generateGrid(mainWindowWidth, mainWindowHeight);
-	var snek = [
-		document.getElementsByClassName('snek')[0]
-	];
+
+	var snek = [matrix[matrix.length/2][matrix[0].length/2]];
+	// snek[0].classList.add("snek");
 
 	var direction = "right";
 	var directionToCheck = "right";
@@ -28,11 +29,18 @@ function main() {
 
 	var grow = false;
 
-	setInterval(function(){
+	var gameInterval = setInterval(function(){
 		direction = directionToCheck;
 		snek = move(matrix, snek, direction, grow);
 		// console.log(snek);
+		if (snek.length == 0) {
+			clearInterval(gameInterval);
+			alert('T00 B4D G4M3 0VER');
+			return main();
+		}
 	}, 100);
+
+
 }
 
 function move(matrix, snek, direction, grow) {
@@ -53,8 +61,12 @@ function move(matrix, snek, direction, grow) {
 			next = snek[i-1];
 		}
 
-		if (i == 0 && next.classList.contains('snek')) {
-			alert('DONEZO');
+		if (next == undefined) {
+			alert('G3T 1N H3R3');
+			return [];
+		} else if (i == 0 && next.classList.contains('snek')) {
+			alert('Y U 34T SN3K');
+			return [];
 		}
 
 		newSnek.push(next);
@@ -76,12 +88,12 @@ function move(matrix, snek, direction, grow) {
 
 function generateGrid(width, height) {
 	var gridWindow = document.createElement('div');
-	var gridWindowWidth = width - (width % 10);
-	var gridWindowHeight = height - (height % 10);
+	var gridWindowWidth = width - (width % 100);
+	var gridWindowHeight = height - (height % 100);
 
 	gridWindow.id = 'gridWindow';
-	gridWindow.style.width = gridWindowWidth;
-	gridWindow.style.height = gridWindowHeight;
+	gridWindow.style.width = gridWindowWidth + "px";
+	gridWindow.style.height = gridWindowHeight + "px";
 	document.getElementById('main').appendChild(gridWindow);
 
 	console.log("Grid WxH: ", gridWindowWidth, gridWindowHeight);
@@ -102,25 +114,19 @@ function generateGrid(width, height) {
 		cell.style.width = cellWidth + "px";
 		cell.style.height = cellWidth + "px";
 		cell.className = "cell";
-		cell.classList.add("r"+cellRow);
-		cell.classList.add("c"+cellCol);
+		// cell.classList.add("r"+cellRow);
+		// cell.classList.add("c"+cellCol);
 		cell.dataset.row = cellRow;
 		cell.dataset.col = cellCol;
-		if (i == Math.floor(numberOfCells/2)) {
-			cell.classList.add("snek");
-		} 
+		// if (i == Math.floor(numberOfCells/2)) {
+		// 	cell.classList.add("snek");
+		// } 
 		document.getElementById('gridWindow').appendChild(cell);
 	}
 
 	var matrix = [];
 	var allCells = document.getElementsByClassName('cell');
 
-	var numberOfPoints = 25;
-	for (i = 0; i < numberOfPoints; i++) {
-		var random = Math.floor((Math.random()*numberOfCells) + 1);
-		allCells[random].classList.add('punt');
-	}
-	
 	for (i = 0; i < cellsOnCol; i++) {
 		var row = [];
 		matrix.push(row);
@@ -128,6 +134,12 @@ function generateGrid(width, height) {
 	
 	for (i = 0; i < numberOfCells; i++) {
 		matrix[Math.floor(i/cellsOnRow)].push(allCells[i]);
+	}
+
+	var numberOfPoints = 25;
+	for (i = 0; i < numberOfPoints; i++) {
+		var random = Math.floor((Math.random()*numberOfCells) + 1);
+		allCells[random].classList.add('punt');
 	}
 
 	return matrix;
